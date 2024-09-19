@@ -1,0 +1,48 @@
+.todoItem {
+	display: flex;
+	gap: 80px;
+	min-width: 370px;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-bottom: 10px;
+}
+
+.todoItem__checkboxLabel {
+	display: flex;
+	align-items: center;
+	font-family: "Roboto", sans-serif;
+}
+
+.todoItem__checkbox {
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.completed {
+	text-decoration: line-through;
+	color: grey;
+}
+
+.todoItem__action {
+	display: flex;
+	gap: 10px;
+}
+
+.todoItem__actionEdit,
+.todoItem__actionDelete {
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+.todoItem__actionEdit svg {
+	fill: #4285f4;
+}
+
+.todoItem__actionDelete svg {
+	fill: #db4437;
+}

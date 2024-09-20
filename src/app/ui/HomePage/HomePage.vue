@@ -1,16 +1,10 @@
 <script setup lang="ts">
 	import TodoItem from "../../components/TodoItem/TodoItem.vue"
+	import { useTodos } from "../../../composables/useTodos"
 
-	const todos = [
-		{
-			title: "text",
-			isCompleted: false,
-		},
-		{
-			title: "text2",
-			isCompleted: false,
-		},
-	]
+	const { todos, todoInfo, isLoading, error, fetchTodos } = useTodos()
+
+	fetchTodos("all") // TODO: key and this in live hook
 </script>
 
 <template>
@@ -32,7 +26,7 @@
 		<TodoItem
 			v-for="todo in todos"
 			:title="todo.title"
-			:is-completed="todo.isCompleted"
+			:is-completed="todo.isDone"
 		/>
 	</div>
 </template>

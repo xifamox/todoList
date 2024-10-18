@@ -89,14 +89,31 @@
 		</div>
 		<div :class="$style.todoItem__action">
 			<template v-if="isEditing">
-				<ActionButton :type="ButtonTypes.SAVE" @save="validateAndSaveEdit" />
-				<ActionButton :type="ButtonTypes.CANCEL" @cancel="cancelEdit" />
+				<ActionButton
+					type="access"
+					icon="save.svg"
+					label="Save"
+					@click="validateAndSaveEdit"
+				/>
+				<ActionButton
+					type="warning"
+					icon="cancel.svg"
+					label="Cancel"
+					@click="cancelEdit"
+				/>
 			</template>
 			<template v-else>
-				<ActionButton :type="ButtonTypes.EDIT" @edit="startEditing" />
 				<ActionButton
-					:type="ButtonTypes.DELETE"
-					@delete="emit('remove-todo', props.id)"
+					type="primary"
+					icon="edit.svg"
+					label="Edit"
+					@click="startEditing"
+				/>
+				<ActionButton
+					type="error"
+					icon="delete.svg"
+					label="Delete"
+					@click="emit('remove-todo', props.id)"
 				/>
 			</template>
 		</div>

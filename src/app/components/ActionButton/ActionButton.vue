@@ -1,57 +1,39 @@
 <script setup lang="ts">
 	import { computed } from "vue"
 	import styles from "./styles/ActionButton.module.scss"
-	import { ButtonType, ButtonTypes } from "./types/ActionButton"
 
 	const props = defineProps({
 		type: {
-			type: String as () => ButtonType,
+			type: String,
 			required: true,
-			validator: (value: string) =>
-				["edit", "delete", "save", "cancel"].includes(value),
+		},
+		icon: {
+			type: String,
+			default: null,
+		},
+		label: {
+			type: String,
+			default: null,
 		},
 	})
 
-	const emit = defineEmits(["edit", "delete", "save", "cancel"])
+	const emit = defineEmits(["click"])
 
-	const buttonConfig = computed(
-		() =>
-			({
-				edit: {
-					class: styles.editButton,
-					icon: "edit.svg",
-					event: ButtonTypes.EDIT,
-					alt: "Edit Button",
-				},
-				delete: {
-					class: styles.deleteButton,
-					icon: "delete.svg",
-					event: ButtonTypes.DELETE,
-					alt: "Delete Button",
-				},
-				save: {
-					class: styles.saveButton,
-					icon: "save.svg",
-					event: ButtonTypes.SAVE,
-					alt: "Save Button",
-				},
-				cancel: {
-					class: styles.cancelButton,
-					icon: "cancel.svg",
-					event: ButtonTypes.CANCEL,
-					alt: "Cancel Button",
-				},
-			}[props.type])
-	)
+	const buttonClass = computed(() => [
+		styles.button,
+		styles[`${props.type}Button`],
+	])
 
-	const emitAction = () => {
-		emit(buttonConfig.value.event)
+	const handleClick = (event: Event) => {
+		emit("click", event)
 	}
 </script>
 
 <template>
-	<button :class="buttonConfig.class" @click="emitAction">
-		<img :src="buttonConfig.icon" :alt="buttonConfig.alt" />
+	<button :class="buttonClass" @click="handleClick">
+		<img v-if="props.icon" :src="props.icon" alt="button icon" />
+
+		<span v-if="props.label" :class="$style.tooltip">{{ props.label }}</span>
 	</button>
 </template>
 

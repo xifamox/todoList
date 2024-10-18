@@ -1,100 +1,142 @@
 <script setup lang="ts">
-	import TodoItem from "../../components/TodoItem/TodoItem.vue"
-	import { computed, onMounted, ref } from "vue"
-	import { filterTodos } from "./features/HomePage"
-	import { useTodos } from "../../../composables/useTodos"
+	import { ref, onMounted } from "vue"
+	import {
+		createTodo,
+		deleteTodo,
+		getTodos,
+		updateTodo,
+		updateTodoStatus,
+	} from "../../../services/todoService"
+	import { Todo, TodoInfo, TodoStatus, TodoRequest } from "@/types/todo"
+	import AddTodoForm from "../../components/AddTodoForm/AddTodoForm.vue"
+	import TodoFilters from "../../components/TodoFilters/TodoFilters.vue"
+	import TodoList from "../../components/TodoList/TodoList.vue"
 
-	const {
-		todos,
-		fetchTodos,
-		addTodo,
-		toggleTodoStatus,
-		removeTodo,
-		updateTodoTitle,
-		isLoading,
-	} = useTodos()
+	const todos = ref<Todo[]>([])
+	const todoInfo = ref<TodoInfo | null>(null)
+	const isLoading = ref(false)
+	const error = ref<string | null>(null)
 
-	onMounted(async () => {
-		await fetchTodos("all")
-	})
+	const currentFilter = ref<TodoStatus>("all")
 
-	const newTaskTitle = ref<string>("")
-	const isError = ref<boolean>(false)
-
-	const currentFilter = ref<"all" | "completed" | "inWork">("all")
-
-	const filteredTodos = computed(() => {
-		return filterTodos(todos.value, currentFilter.value)
-	})
-
-	const handleAddTodo = async () => {
-		if (newTaskTitle.value.length == 0) {
-			isError.value = true
-		} else {
-			if (newTaskTitle.value.trim()) {
-				isError.value = false
-				await addTodo({ title: newTaskTitle.value, isDone: false })
-				newTaskTitle.value = ""
+	const fetchTodos = async (status: TodoStatus = "all"): Promise<void> => {
+		isLoading.value = true
+		error.value = null
+		try {
+			const response = await getTodos(status)
+			if (response) {
+				todos.value = response.data || []
+				todoInfo.value = response.info || null
+			} else {
+				throw new Error("Failed to load todos")
 			}
+		} catch (err) {
+			error.value = err instanceof Error ? err.message : "Unknown error"
+		} finally {
+			isLoading.value = false
 		}
 	}
 
-	const allTodos = computed(() => {
-		return todos.value.length
-	})
+	const handleAddTodo = async (title: string): Promise<void> => {
+		isLoading.value = true
+		try {
+			const newTodo: TodoRequest = { title, isDone: false }
+			const createdTodo = await createTodo(newTodo)
+			if (createdTodo) {
+				await fetchTodos(currentFilter.value)
+			}
+		} catch (err) {
+			error.value = err instanceof Error ? err.message : "Failed to create todo"
+		} finally {
+			isLoading.value = false
+		}
+	}
 
-	const completedTodos = computed(() => {
-		return todos.value.filter(task => task.isDone).length
-	})
+	const handleToggleTodoStatus = async (
+		id: number,
+		newStatus: boolean
+	): Promise<void> => {
+		isLoading.value = true
+		try {
+			const updatedTodo = await updateTodoStatus(id, newStatus)
+			if (updatedTodo) {
+				await fetchTodos(currentFilter.value)
+			}
+		} catch (err) {
+			error.value = err instanceof Error ? err.message : "Failed to update todo"
+		} finally {
+			isLoading.value = false
+		}
+	}
 
-	const inWorkTodos = computed(() => {
-		return todos.value.filter(todo => !todo.isDone).length
+	const handleDeleteTodo = async (id: number): Promise<void> => {
+		isLoading.value = true
+		try {
+			const success = await deleteTodo(id)
+			if (success) {
+				todos.value = todos.value.filter(todo => todo.id !== id)
+				await fetchTodos(currentFilter.value)
+			}
+		} catch (err) {
+			error.value = err instanceof Error ? err.message : "Failed to delete todo"
+		} finally {
+			isLoading.value = false
+		}
+	}
+
+	const handleUpdateTodoTitle = async (
+		id: number,
+		newTitle: string
+	): Promise<void> => {
+		try {
+			const updatedTodo = await updateTodo(id, { title: newTitle })
+			if (updatedTodo) {
+				const index = todos.value.findIndex(todo => todo.id === id)
+				if (index !== -1) {
+					todos.value[index] = {
+						...todos.value[index],
+						title: updatedTodo.title,
+					}
+				}
+			}
+		} catch (err) {
+			error.value = err instanceof Error ? err.message : "Failed to update todo"
+		}
+	}
+
+	const handleFilterChange = async (status: TodoStatus): Promise<void> => {
+		currentFilter.value = status
+		await fetchTodos(status)
+	}
+
+	onMounted(() => {
+		fetchTodos(currentFilter.value)
 	})
-	const handleToggleTodoStatus = async (id: number, newStatus: boolean) => {
-		await toggleTodoStatus(id, newStatus)
-	}
-	const handleDeleteTodo = async (id: number) => {
-		await removeTodo(id)
-	}
-	const handleUpdateTodoTitle = async (id: number, newTitle: string) => {
-		await updateTodoTitle(id, newTitle)
-	}
 </script>
 
 <template>
 	<h1 :class="$style.title">Todo List</h1>
-	<form :class="$style.addTodo" @submit.prevent>
-		<input
-			v-model="newTaskTitle"
-			type="text"
-			:class="[isError ? $style.errorInput : '', $style.addTodo__input]"
-			placeholder="Task To Be Done..."
-		/>
-		<button :class="$style.addTodo__btn" @click="handleAddTodo">Add</button>
-	</form>
 
-	<div :class="$style.todoList">
-		<div :class="$style.todoList__nav">
-			<a @click="currentFilter = 'all'">Все ({{ allTodos }})</a>
-			<a @click="currentFilter = 'inWork'">в работе ({{ inWorkTodos }})</a>
-			<a @click="currentFilter = 'completed'">сделано ({{ completedTodos }})</a>
-		</div>
-		<template v-if="isLoading">
-			<p>Загрузка</p>
-		</template>
-		<template v-else>
-			<TodoItem
-				v-for="todo in filteredTodos"
-				:key="todo.id"
-				:title="todo.title"
-				:is-completed="todo.isDone"
-				:id="todo.id"
-				@toggle-status="handleToggleTodoStatus"
-				@remove-todo="handleDeleteTodo"
-				@update-todo="handleUpdateTodoTitle"
-			/>
-		</template>
-	</div>
+	<AddTodoForm @add-todo="handleAddTodo" />
+
+	<TodoFilters
+		:totalTodosCount="todoInfo?.all || 0"
+		:inWorkTodosCount="todoInfo?.inWork || 0"
+		:completedTodosCount="todoInfo?.completed || 0"
+		@filter-change="handleFilterChange"
+	/>
+
+	<p v-if="isLoading" :class="$style.loading">Загрузка...</p>
+
+	<TodoList
+		v-else
+		:todos="todos"
+		@toggle-status="handleToggleTodoStatus"
+		@remove-todo="handleDeleteTodo"
+		@update-todo="handleUpdateTodoTitle"
+	/>
+
+	<p v-if="error">{{ error }}</p>
 </template>
 
 <style module lang="scss">

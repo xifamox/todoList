@@ -22,8 +22,11 @@ export const getTodos = async (
 		const data = await response.json()
 		return data
 	} catch (error) {
-		console.error(error)
-		return null
+		throw new Error(
+			`Error fetching data: ${
+				error instanceof Error ? error.message : String(error)
+			}`
+		)
 	}
 }
 
@@ -46,8 +49,11 @@ export const createTodo = async (
 		const data: Todo = await response.json()
 		return data
 	} catch (error) {
-		console.error(error)
-		return null
+		throw new Error(
+			`Error to create todo: ${
+				error instanceof Error ? error.message : String(error)
+			}`
+		)
 	}
 }
 
@@ -71,8 +77,11 @@ export const updateTodoStatus = async (
 		const data: Todo = await response.json()
 		return data
 	} catch (error) {
-		console.error(error)
-		return null
+		throw new Error(
+			`Error to update todo status: ${
+				error instanceof Error ? error.message : String(error)
+			}`
+		)
 	}
 }
 
@@ -88,8 +97,11 @@ export const deleteTodo = async (id: number): Promise<boolean> => {
 
 		return true
 	} catch (error) {
-		console.error("Error deleting todo:", error)
-		return false
+		throw new Error(
+			`Error to delete todo: ${
+				error instanceof Error ? error.message : String(error)
+			}`
+		)
 	}
 }
 export const updateTodo = async (
@@ -112,7 +124,11 @@ export const updateTodo = async (
 		const updatedTodo: Todo = await response.json()
 		return updatedTodo
 	} catch (error) {
-		console.error(error)
+		throw new Error(
+			`Error to update todo: ${
+				error instanceof Error ? error.message : String(error)
+			}`
+		)
 		return null
 	}
 }

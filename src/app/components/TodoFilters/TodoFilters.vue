@@ -1,11 +1,12 @@
 <script setup lang="ts">
 	import { defineProps, defineEmits } from "vue"
 
-	const props = defineProps<{
-		totalTodosCount: number
-		inWorkTodosCount: number
-		completedTodosCount: number
-	}>()
+	const { totalTodosCount, inWorkTodosCount, completedTodosCount } =
+		defineProps<{
+			totalTodosCount: number
+			inWorkTodosCount: number
+			completedTodosCount: number
+		}>()
 
 	const emit = defineEmits<{
 		(e: "filter-change", status: "all" | "inWork" | "completed"): void

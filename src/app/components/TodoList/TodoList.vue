@@ -3,7 +3,7 @@
 	import { defineProps, defineEmits } from "vue"
 	import { Todo } from "@/types/todo"
 
-	const props = defineProps<{
+	const { todos } = defineProps<{
 		todos: Todo[]
 	}>()
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 	import { nextTick, ref, watch } from "vue"
 	import ActionButton from "../ActionButton/ActionButton.vue"
-	import { ButtonTypes } from "../ActionButton/types/ActionButton"
 
 	interface TodoProps {
 		id: number

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	import TodoItem from "../../components/TodoItem/TodoItem.vue"
 	import { defineProps, defineEmits } from "vue"
-	import { Todo } from "@/types/todo" // Предполагаем, что типы задач есть в "@/types/todo"
+	import { Todo } from "@/types/todo"
 
 	const props = defineProps<{
 		todos: Todo[]

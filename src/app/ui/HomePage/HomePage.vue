@@ -7,7 +7,7 @@
 		updateTodo,
 		updateTodoStatus,
 	} from "@/services/todoService"
-	import { Todo, TodoInfo, TodoStatus, TodoRequest } from "@/types/todo"
+	import { Todo, TodoInfo, TodoStatus } from "@/types/todo"
 	import AddTodoForm from "@/app/components/AddTodoForm/AddTodoForm.vue"
 	import TodoFilters from "@/app/components/TodoFilters/TodoFilters.vue"
 	import TodoList from "@/app/components/TodoList/TodoList.vue"

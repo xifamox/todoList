@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { nextTick, ref, watch } from "vue"
-	import ActionButton from "../ActionButton/ActionButton.vue"
+	import IconButton from "@/app/components/IconButton/IconButton.vue"
 
 	interface TodoProps {
 		id: number
@@ -56,6 +56,10 @@
 		}
 	}
 
+	const handleDelete = (id: number) => {
+		emit("remove-todo", id)
+	}
+
 	watch(completed, newVal => {
 		emit("toggle-status", props.id, newVal)
 	})
@@ -88,13 +92,13 @@
 		</div>
 		<div :class="$style.todoItem__action">
 			<template v-if="isEditing">
-				<ActionButton
+				<IconButton
 					type="access"
 					icon="save.svg"
 					label="Save"
 					@click="validateAndSaveEdit"
 				/>
-				<ActionButton
+				<IconButton
 					type="warning"
 					icon="cancel.svg"
 					label="Cancel"
@@ -102,17 +106,17 @@
 				/>
 			</template>
 			<template v-else>
-				<ActionButton
+				<IconButton
 					type="primary"
 					icon="edit.svg"
 					label="Edit"
 					@click="startEditing"
 				/>
-				<ActionButton
+				<IconButton
 					type="error"
 					icon="delete.svg"
 					label="Delete"
-					@click="emit('remove-todo', props.id)"
+					@click="handleDelete(props.id)"
 				/>
 			</template>
 		</div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { computed } from "vue"
-	import styles from "./styles/ActionButton.module.scss"
+	import styles from "./styles/IconButton.module.scss"
 
 	const props = defineProps({
 		type: {
@@ -38,5 +38,5 @@
 </template>
 
 <style module lang="scss">
-	@import "./styles/ActionButton.module.scss";
+	@import "./styles/IconButton.module.scss";
 </style>

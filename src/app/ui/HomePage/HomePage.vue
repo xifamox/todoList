@@ -6,11 +6,11 @@
 		getTodos,
 		updateTodo,
 		updateTodoStatus,
-	} from "../../../services/todoService"
+	} from "@/services/todoService"
 	import { Todo, TodoInfo, TodoStatus, TodoRequest } from "@/types/todo"
-	import AddTodoForm from "../../components/AddTodoForm/AddTodoForm.vue"
-	import TodoFilters from "../../components/TodoFilters/TodoFilters.vue"
-	import TodoList from "../../components/TodoList/TodoList.vue"
+	import AddTodoForm from "@/app/components/AddTodoForm/AddTodoForm.vue"
+	import TodoFilters from "@/app/components/TodoFilters/TodoFilters.vue"
+	import TodoList from "@/app/components/TodoList/TodoList.vue"
 
 	const todos = ref<Todo[]>([])
 	const todoInfo = ref<TodoInfo | null>(null)
@@ -40,11 +40,8 @@
 	const handleAddTodo = async (title: string): Promise<void> => {
 		isLoading.value = true
 		try {
-			const newTodo: TodoRequest = { title, isDone: false }
-			const createdTodo = await createTodo(newTodo)
-			if (createdTodo) {
-				await fetchTodos(currentFilter.value)
-			}
+			await createTodo({ title, isDone: false })
+			await fetchTodos(currentFilter.value)
 		} catch (err) {
 			error.value = err instanceof Error ? err.message : "Failed to create todo"
 		} finally {

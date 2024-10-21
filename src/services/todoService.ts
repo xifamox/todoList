@@ -1,11 +1,11 @@
-import appConfig from "../app/config/app.config"
+import appConfig from "@/app/config/app.config"
 import {
 	MetaResponse,
 	Todo,
 	TodoInfo,
 	TodoRequest,
 	TodoStatus,
-} from "../types/todo"
+} from "@/types/todo"
 
 const BASE_URL = appConfig.apiBaseUrl
 

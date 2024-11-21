@@ -41,14 +41,15 @@ export const useAuthStore = defineStore('auth', {
 			}
 		},
 		resetAuthState() {
-			Object.assign(this, {
-				isAuthorized: false,
-				accessToken: null,
-				refreshToken: null,
-				expireDate: 0,
-				user: null,
-				fieldErrors: {}
-			});
+			this.isAuthorization = false;
+			this.accessToken = '';
+			this.refreshToken = '';
+			this.expireDate = 0;
+
+			this.resetUser();
+		},
+		resetUser() {
+			this.user = null;
 		},
 		setIsLoading(value: boolean) {
 			this.isLoading = value;
@@ -70,14 +71,17 @@ export const useAuthStore = defineStore('auth', {
 				throw new Error('Refresh token is missing.');
 			}
 
-			try {
-				const response = await ApiClient.post<NAuth.ITokens>(
-					`${NAuth.API_NAMESPACE}/refresh`,
-					{ refreshToken: this.refreshToken }
-				);
+			this.setIsLoading(true);
 
-				if (response.data) {
-					this.setAuth(response.data);
+			try {
+				if (!this.isLoading) {
+					const response = await ApiClient.post<NAuth.ITokens>(
+						`${NAuth.API_NAMESPACE}/refresh`,
+						{ refreshToken: this.refreshToken }
+					);
+					if (response.data) {
+						this.setAuth(response.data);
+					}
 				}
 			} catch {
 				this.resetAuthState();

@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-	readonly VITE_APP_API_URL: string; // Добавьте другие переменные окружения, если есть
+	readonly VITE_APP_API_URL: string;
 }
 
 interface ImportMeta {

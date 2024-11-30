@@ -26,20 +26,20 @@ const {
 		<v-text-field
 			v-model="formData.username"
 			label="Имя пользователя"
-			:rules="[rules.required, rules.alphabetic(1, 60)]"
+			:rules="[rules.required, rules.alphabetic, rules.length(1, 60)]"
 			required
 		/>
 		<v-text-field
 			v-model="formData.login"
 			label="Логин"
-			:rules="[rules.required, rules.latin(2, 60)]"
+			:rules="[rules.required, rules.latin, rules.length(2, 60)]"
 			required
 		/>
 		<v-text-field
 			v-model="formData.password"
 			label="Пароль"
 			type="password"
-			:rules="[rules.required, rules.password(6, 60)]"
+			:rules="[rules.required, rules.length(6, 60)]"
 			required
 		/>
 		<v-text-field

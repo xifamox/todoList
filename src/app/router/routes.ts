@@ -17,16 +17,13 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '',
 				name: AppRoutes.Todos,
-				component: () =>
-					import('@/modules/todo/ui/views/TodoPage/TodoPage.vue'),
-				meta: { title: 'Todos' }
+				component: () => import('@/modules/todo/ui/views/TodoPage/TodoPage.vue')
 			},
 			{
 				path: '/profile',
 				name: `${AppRoutes.Todos}-profile`,
 				component: () =>
-					import('@/modules/profile/ui/views/Profile/ProfilePage.vue'),
-				meta: { title: 'Profile' }
+					import('@/modules/profile/ui/views/Profile/ProfilePage.vue')
 			}
 		]
 	},
@@ -40,22 +37,19 @@ const routes: RouteRecordRaw[] = [
 				path: 'login',
 				name: AppRoutes.Auth,
 				component: () =>
-					import('@/modules/auth/ui/views/LoginPage/LoginPage.vue'),
-				meta: { title: 'Login' }
+					import('@/modules/auth/ui/views/LoginPage/LoginPage.vue')
 			},
 			{
 				path: 'register',
 				name: `${AppRoutes.Auth}-register`,
 				component: () =>
-					import('@/modules/auth/ui/views/RegisterPage/RegisterPage.vue'),
-				meta: { title: 'Register' }
+					import('@/modules/auth/ui/views/RegisterPage/RegisterPage.vue')
 			}
 		]
 	},
 	{
 		path: '/:catchAll(.*)*',
-		component: () => import('@/app/ui/views/NotFoundView/NotFoundView.vue'),
-		meta: { title: 'Not Found' }
+		component: () => import('@/app/ui/views/NotFoundView/NotFoundView.vue')
 	}
 ];
 

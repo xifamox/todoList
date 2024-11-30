@@ -9,9 +9,4 @@ const router = createRouter({
 
 registerRouterMiddleware(router);
 
-router.beforeEach((to) => {
-	const title = to.meta?.title;
-	if (title) document.title = `EasyDev - ${title}`;
-});
-
 export default router;

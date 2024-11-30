@@ -15,38 +15,29 @@ export function useAuthForm(mode: string) {
 
 	const rules = {
 		required: (value: string) => !!value || 'Это поле обязательно',
-		alphabetic: (min: number, max: number) => (value: string) =>
-			(/^[a-zA-Zа-яА-Я]+$/.test(value) &&
-				value.length >= min &&
-				value.length <= max) ||
-			`Только буквы (от ${min} до ${max} символов)`,
-		latin: (min: number, max: number) => (value: string) =>
-			(/^[a-zA-Z]+$/.test(value) &&
-				value.length >= min &&
-				value.length <= max) ||
-			`Только латинские буквы (от ${min} до ${max} символов)`,
-		alphanumeric: (min: number, max: number) => (value: string) =>
-			(/^[a-zA-Z]+$/.test(value) &&
-				value.length >= min &&
-				value.length <= max) ||
-			`Только латинские буквы (от ${min} до ${max} символов)`,
-		password: (min: number, max: number) => (value: string) =>
-			(value.length >= min && value.length <= max) ||
-			`Пароль должен содержать от ${min} до ${max} символов`,
-		matchPassword: (value: string) =>
-			value === formData.value.password || 'Пароли не совпадают',
+		alphabetic: (value: string) =>
+			/^[a-zA-Zа-яА-Я]+$/.test(value) || 'Только буквы',
+		latin: (value: string) =>
+			/^[a-zA-Z]+$/.test(value) || 'Только латинские буквы',
+		alphanumeric: (value: string) =>
+			/^[a-zA-Z]+$/.test(value) || 'Только латинские буквы',
 		email: (value: string) =>
 			/\S+@\S+\.\S+/.test(value) || 'Введите корректный Email',
 		phoneNumber: (value: string) =>
-			/^(\+?\d{10,15})?$/.test(value) || 'Введите корректный номер телефона'
+			/^(\+?\d{10,15})?$/.test(value) || 'Введите корректный номер телефона',
+		length: (min: number, max: number) => (value: string) =>
+			(value.length >= min && value.length <= max) ||
+			`Длина должна быть от ${min} до ${max} символов`,
+		matchPassword: (value: string) =>
+			value === formData.value.password || 'Пароли не совпадают'
 	};
 
 	const validationKeys: Partial<
 		Record<keyof TAuthFormState, Array<(value: string) => string | true>>
 	> = {
-		username: [rules.required, rules.alphabetic(1, 60)],
-		login: [rules.required, rules.alphanumeric(2, 60)],
-		password: [rules.required, rules.password(6, 60)],
+		username: [rules.required, rules.alphabetic, rules.length(1, 60)],
+		login: [rules.required, rules.alphanumeric, rules.length(2, 60)],
+		password: [rules.required, rules.length(6, 60)],
 		...(isRegisterMode.value && {
 			confirmPassword: [rules.required, rules.matchPassword],
 			email: [rules.required, rules.email],

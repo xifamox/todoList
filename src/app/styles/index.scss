@@ -1,2 +1,4 @@
-@import "./app.scss";
-@import "./reset.scss";
+@use "./app.scss";
+@use "./reset.scss";
+@use "vuetify/styles";
+@use "@mdi/font/css/materialdesignicons.css";

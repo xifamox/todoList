@@ -1,7 +1,7 @@
-import { NavigationGuardNext, RouterLocationNormalized } from 'vue-router';
+import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
 export interface RouterContext {
-	to: RouterLocationNormalized;
-	from: RouterLocationNormalized;
+	to: RouteLocationNormalized;
+	from: RouteLocationNormalized;
 	next: NavigationGuardNext;
 }

@@ -1,21 +1,12 @@
 import { RouterContext } from '@/app/router/types';
-import { useAuthStore } from '../stores';
-import { AppRoutes } from '@/app/router/static';
+import { useAuthStore } from '@/modules/auth/infrastructure/stores';
 
-export default async function auth({ next }: RouterContext) {
+export default async function authMiddleware({ next }: RouterContext) {
 	const authStore = useAuthStore();
 
-	try {
-		if (!authStore.refreshToken) {
-			authStore.resetAuthState();
-			return next({ name: AppRoutes.Auth });
-		}
-		await authStore.verifyAuthorization();
-		return next();
-	} catch {
-		authStore.resetAuthState();
-		return next({
-			name: AppRoutes.Auth
-		});
+	if (!authStore.isAuthorization) {
+		return next('/auth/login');
 	}
+
+	next();
 }

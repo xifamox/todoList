@@ -8,6 +8,9 @@ export const useProfileStore = defineStore('profile', {
 		...fetchStateInitialState,
 		...initialProfileState
 	}),
+	getters: {
+		isAdmin: (state: NProfile.IState) => state.profile?.isAdmin || false
+	},
 	actions: {
 		setProfile(profile: NProfile.IProfilePayload) {
 			this.profile = profile;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import router from '@/app/router';
+import { AppRoutes } from '@/app/router/static';
 import { useAuthStore } from '@/modules/auth/infrastructure/stores';
 import { useProfileService } from '@/modules/profile/infrastructure/services';
 import { useProfileStore } from '@/modules/profile/infrastructure/stores';
@@ -11,7 +12,7 @@ const { fetchProfile } = useProfileService();
 
 const logout = () => {
 	resetAuthState();
-	router.push('/auth/login');
+	router.push({ name: `${AppRoutes.Auth}` });
 };
 
 onMounted(async () => {

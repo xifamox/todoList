@@ -20,17 +20,15 @@ export const useAuthStore = defineStore('auth', {
 		accessToken: '',
 		refreshToken: '',
 		expireDate: 0,
-		user: null,
 		fieldErrors: {}
 	}),
 	getters: {
 		isTokenExpired: (state: NAuth.IState) => Date.now() >= state.expireDate
 	},
 	actions: {
-		setAuth(payload: Partial<NAuth.ITokens> & { user?: NAuth.IUserProfile }) {
+		async setAuth(payload: Partial<NAuth.ITokens>) {
 			this.accessToken = payload.accessToken ?? null;
 			this.refreshToken = payload.refreshToken ?? null;
-			this.user = payload.user || null;
 
 			if (this.accessToken) {
 				const { exp } = parseJwt(this.accessToken);
@@ -45,11 +43,6 @@ export const useAuthStore = defineStore('auth', {
 			this.accessToken = '';
 			this.refreshToken = '';
 			this.expireDate = 0;
-
-			this.resetUser();
-		},
-		resetUser() {
-			this.user = null;
 		},
 		setIsLoading(value: boolean) {
 			this.isLoading = value;

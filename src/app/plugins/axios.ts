@@ -3,7 +3,7 @@ import appConfig from '../config/app.config';
 import { useAuthStore } from '@/modules/auth/infrastructure/stores/useAuthStore';
 import router from '@/app/router';
 
-const instance: AxiosInstance = axios.create({
+const apiClient: AxiosInstance = axios.create({
 	baseURL: appConfig.apiBaseUrl,
 	headers: {
 		'Content-Type': 'application/json'
@@ -11,7 +11,7 @@ const instance: AxiosInstance = axios.create({
 	withCredentials: true
 });
 
-instance.interceptors.request.use(
+apiClient.interceptors.request.use(
 	(config) => {
 		const authStore = useAuthStore();
 		if (authStore.accessToken) {
@@ -27,7 +27,7 @@ instance.interceptors.request.use(
 	}
 );
 
-instance.interceptors.response.use(
+apiClient.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		if (error.response?.status === 401) {
@@ -36,7 +36,7 @@ instance.interceptors.response.use(
 				if (!authStore.isLoading) {
 					await authStore.refreshTokens();
 					error.config.headers.Authorization = `Bearer ${authStore.accessToken}`;
-					return instance.request(error.config);
+					return apiClient.request(error.config);
 				}
 			} catch {
 				authStore.resetAuthState();
@@ -47,4 +47,4 @@ instance.interceptors.response.use(
 	}
 );
 
-export default instance;
+export default apiClient;

@@ -16,7 +16,6 @@ export namespace NAuth {
 		refreshToken: string | null;
 		expireDate: number;
 		fieldErrors: Record<string, string>;
-		user: IUserProfile | null;
 	}
 
 	export interface IModel {

@@ -14,8 +14,8 @@ export function useDetectUserService() {
 		try {
 			const response = await login(payload);
 			if (response.data) {
-				const { user, accessToken, refreshToken } = response.data;
-				authStore.setAuth({ user, accessToken, refreshToken });
+				const { accessToken, refreshToken } = response.data;
+				authStore.setAuth({ accessToken, refreshToken });
 				return true;
 			}
 			authStore.setError(response.error);

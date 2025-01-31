@@ -3,7 +3,8 @@ import { IFetchState } from '@/shared/domain';
 import { RequestReturnError, RequestReturnValue } from '@/shared/types/api';
 
 export namespace NAuth {
-	export const API_NAMESPACE = 'auth';
+	export const API_VERSION = 'v1';
+	export const API_NAMESPACE = `${API_VERSION}/auth`;
 
 	export interface IUserProfile extends Profile {}
 	export interface ITokens extends Token {}
@@ -19,18 +20,11 @@ export namespace NAuth {
 	}
 
 	export interface IModel {
-		login: (payload: ILoginPayload) => Promise<
-			RequestReturnValue<{
-				user: IUserProfile;
-				accessToken: string;
-				refreshToken: string;
-			}>
-		>;
+		login: (payload: ILoginPayload) => Promise<RequestReturnValue<ITokens>>;
 		register: (payload: IRegisterPayload) => Promise<
 			RequestReturnValue<{
 				user: IUserProfile;
 				accessToken: string;
-				refreshToken: string;
 			}>
 		>;
 	}

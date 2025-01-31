@@ -3,7 +3,8 @@ import { IFetchState } from '@/shared/domain';
 import { RequestReturnError, RequestReturnValue } from '@/shared/types/api';
 
 export namespace NProfile {
-	export const API_NAMESPACE = 'user';
+	export const API_VERSION = 'v1';
+	export const API_NAMESPACE = `${API_VERSION}/user`;
 
 	export interface IProfilePayload extends Profile {}
 

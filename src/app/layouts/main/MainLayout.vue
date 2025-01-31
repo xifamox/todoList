@@ -7,7 +7,7 @@ import { AppFooter, AppHeader, Sidebar } from '@/app/ui/components';
 		<Sidebar />
 		<AppHeader />
 		<v-main>
-			<router-view />
+			<router-view :key="$route.fullPath" />
 		</v-main>
 		<AppFooter />
 	</v-app>

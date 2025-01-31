@@ -24,6 +24,7 @@ const {
 		@submit.prevent="handleSubmit"
 	>
 		<v-text-field
+			v-if="isRegisterMode"
 			v-model="formData.username"
 			label="Имя пользователя"
 			:rules="[rules.required, rules.alphabetic, rules.length(1, 60)]"
@@ -78,3 +79,7 @@ const {
 		</v-alert>
 	</v-form>
 </template>
+
+<style module lang="scss">
+@use './style/AuthForm.module.scss';
+</style>

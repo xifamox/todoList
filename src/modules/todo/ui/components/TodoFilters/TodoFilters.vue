@@ -11,6 +11,8 @@ const handleFilterChange = async (status: NTodo.TodoStatus) => {
 	await fetchTodos(status);
 };
 
+const currentFilter = computed(() => todoStore.currentFilter);
+
 const totalTodosCount = computed(() => todoStore.todoInfo?.all || 0);
 const inWorkTodosCount = computed(() => todoStore.todoInfo?.inWork || 0);
 const completedTodosCount = computed(() => todoStore.todoInfo?.completed || 0);
@@ -18,13 +20,22 @@ const completedTodosCount = computed(() => todoStore.todoInfo?.completed || 0);
 
 <template>
 	<div :class="$style.todoList__nav">
-		<button @click="handleFilterChange('all')">
+		<button
+			:class="{ [$style.active]: currentFilter === 'all' }"
+			@click="handleFilterChange('all')"
+		>
 			Все ({{ totalTodosCount }})
 		</button>
-		<button @click="handleFilterChange('inWork')">
+		<button
+			:class="{ [$style.active]: currentFilter === 'inWork' }"
+			@click="handleFilterChange('inWork')"
+		>
 			в работе ({{ inWorkTodosCount }})
 		</button>
-		<button @click="handleFilterChange('completed')">
+		<button
+			:class="{ [$style.active]: currentFilter === 'completed' }"
+			@click="handleFilterChange('completed')"
+		>
 			сделано ({{ completedTodosCount }})
 		</button>
 	</div>

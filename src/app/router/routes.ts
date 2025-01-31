@@ -44,6 +44,18 @@ const routes: RouteRecordRaw[] = [
 					requiresAdmin: true,
 					middleware: [authMiddleware, adminMiddleware]
 				}
+			},
+			{
+				path: '/users/:id',
+				name: 'UserProfile',
+				component: () =>
+					import(
+						'@/modules/users/ui/views/UserProfilePage/UserProfilePage.vue'
+					),
+				meta: {
+					requiresAdmin: true,
+					middleware: [authMiddleware, adminMiddleware]
+				}
 			}
 		]
 	},

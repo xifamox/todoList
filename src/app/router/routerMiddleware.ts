@@ -15,6 +15,7 @@ export const registerRouterMiddleware = (router: Router) => {
 		const context = {
 			to,
 			from,
+
 			next,
 			router
 		};

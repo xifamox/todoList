@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/modules/auth/infrastructure/stores';
 import { useProfileService } from '@/modules/profile/infrastructure/services';
 import { useProfileStore } from '@/modules/profile/infrastructure/stores';
+import { Roles } from '@/modules/users/types';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -16,37 +17,41 @@ const profileService = useProfileService();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 
-const sidebarItems = computed(() => [
-	{
-		title: 'Список задач',
-		icon: 'mdi-format-list-bulleted',
-		route: '/',
-		action: null
-	},
-	{
-		title: 'Личный кабинет',
-		icon: 'mdi-account',
-		route: '/profile',
-		action: null
-	},
-	...(profileStore.isAdmin
-		? [
-				{
-					title: 'Пользователи',
-					icon: 'mdi-account-group',
-					route: '/users',
-					action: null
-				}
-		  ]
-		: []),
-	{
-		title: 'Свернуть',
-		icon: () =>
-			isSidebarExpanded.value ? 'mdi-chevron-left' : 'mdi-chevron-right',
-		route: null,
-		action: toggleSidebar
-	}
-]);
+const sidebarItems = computed(() => {
+	const roles = profileStore.profile?.roles || [];
+
+	return [
+		{
+			title: 'Список задач',
+			icon: 'mdi-format-list-bulleted',
+			route: '/',
+			action: null
+		},
+		{
+			title: 'Личный кабинет',
+			icon: 'mdi-account',
+			route: '/profile',
+			action: null
+		},
+		...(roles.includes(Roles.ADMIN)
+			? [
+					{
+						title: 'Пользователи',
+						icon: 'mdi-account-group',
+						route: '/users',
+						action: null
+					}
+			  ]
+			: []),
+		{
+			title: 'Свернуть',
+			icon: () =>
+				isSidebarExpanded.value ? 'mdi-chevron-left' : 'mdi-chevron-right',
+			route: null,
+			action: toggleSidebar
+		}
+	];
+});
 
 const navigateTo = (route: string | null, action: (() => void) | null) => {
 	if (route) {

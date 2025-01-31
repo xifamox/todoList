@@ -35,7 +35,6 @@ export function useAuthForm(mode: string) {
 	const validationKeys: Partial<
 		Record<keyof TAuthFormState, Array<(value: string) => string | true>>
 	> = {
-		username: [rules.required, rules.alphabetic, rules.length(1, 60)],
 		login: [rules.required, rules.alphanumeric, rules.length(2, 60)],
 		password: [rules.required, rules.length(6, 60)],
 		...(isRegisterMode.value && {

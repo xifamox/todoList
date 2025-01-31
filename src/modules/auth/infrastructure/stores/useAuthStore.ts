@@ -6,13 +6,7 @@ import { parseJwt } from '@/shared/utils/jwt';
 
 export const useAuthStore = defineStore('auth', {
 	persist: {
-		paths: [
-			'accessToken',
-			'refreshToken',
-			'expireDate',
-			'isAuthorization',
-			'user'
-		]
+		paths: ['accessToken', 'refreshToken', 'expireDate', 'isAuthorization']
 	},
 	state: (): NAuth.IState => ({
 		...fetchStateInitialState,
@@ -79,6 +73,8 @@ export const useAuthStore = defineStore('auth', {
 			} catch {
 				this.resetAuthState();
 				throw new Error('Failed to refresh tokens');
+			} finally {
+				this.isLoading = false;
 			}
 		}
 	}

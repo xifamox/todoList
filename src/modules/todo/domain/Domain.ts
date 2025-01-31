@@ -3,7 +3,8 @@ import { Todo, TodoInfo, TodoRequest, MetaResponse } from '../types/api';
 import { RequestReturnError } from '@/shared/types/api';
 
 export namespace NTodo {
-	export const API_NAMESPACE = 'todos';
+	export const API_VERSION = 'v1';
+	export const API_NAMESPACE = `${API_VERSION}/todos`;
 
 	export interface ITodo extends Todo {}
 	export interface ITodoInfo extends TodoInfo {}

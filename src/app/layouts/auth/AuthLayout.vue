@@ -1,6 +1,6 @@
 <template>
-	<v-app class="auth_container">
-		<router-view />
+	<v-app :class="$style.auth_container">
+		<router-view :key="$route.fullPath" />
 	</v-app>
 </template>
 

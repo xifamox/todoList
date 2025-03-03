@@ -6,7 +6,7 @@ export const useAuthModel = (): NAuth.IModel => {
 	const login = (
 		payload: NAuth.ILoginPayload
 	): Promise<
-		RequestReturnValue<NAuth.ITokens & { user: NAuth.IUserProfile }>
+		RequestReturnValue<NAuth.ITokens>
 	> => {
 		return ApiClient.post(`${NAuth.API_NAMESPACE}/signin`, payload);
 	};

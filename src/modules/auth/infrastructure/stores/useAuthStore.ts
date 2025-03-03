@@ -31,6 +31,9 @@ export const useAuthStore = defineStore('auth', {
 					this.isAuthorization = true;
 				}
 			}
+			if (payload.refreshToken) {
+				this.refreshToken = payload.refreshToken;
+			}
 		},
 		resetAuthState() {
 			this.isAuthorization = false;
@@ -45,36 +48,38 @@ export const useAuthStore = defineStore('auth', {
 			this.error = error;
 		},
 		async verifyAuthorization() {
-			if (this.isTokenExpired) {
-				await this.refreshTokens();
-			}
-			if (!this.accessToken) {
+			try {
+				if (this.isTokenExpired) {
+					await this.refreshTokens();
+				}
+				if (!this.accessToken) {
+					throw new Error('Unauthorized');
+				}
+			} catch (error) {
+				this.resetAuthState();
 				throw new Error('Unauthorized');
 			}
 		},
 		async refreshTokens() {
 			if (!this.refreshToken) {
-				this.resetAuthState();
-				throw new Error('Refresh token is missing.');
+				return this.resetAuthState();
 			}
 
 			this.setIsLoading(true);
 
 			try {
-				if (!this.isLoading) {
-					const response = await ApiClient.post<NAuth.ITokens>(
-						`${NAuth.API_NAMESPACE}/refresh`,
-						{ refreshToken: this.refreshToken }
-					);
-					if (response.data) {
-						this.setAuth(response.data);
-					}
+				const response = await ApiClient.post<NAuth.ITokens>(
+					`${NAuth.API_NAMESPACE}/refresh`,
+					{ refreshToken: this.refreshToken }
+				);
+				if (response.data) {
+					this.setAuth(response.data);
 				}
-			} catch {
+			} catch (error) {
 				this.resetAuthState();
 				throw new Error('Failed to refresh tokens');
 			} finally {
-				this.isLoading = false;
+				this.setIsLoading(false);
 			}
 		}
 	}

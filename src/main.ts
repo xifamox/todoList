@@ -5,7 +5,6 @@ import { registerPlugins } from './app/plugins';
 import './app/styles/index.scss';
 
 const app = createApp(App);
-
 registerPlugins(app);
 
 app.mount('#app');

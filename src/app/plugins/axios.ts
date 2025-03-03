@@ -14,7 +14,16 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
 	(config) => {
 		const authStore = useAuthStore();
-		if (authStore.accessToken) {
+		if (authStore.isTokenExpired) {
+			try {
+				config.headers = new axios.AxiosHeaders({
+					...config.headers,
+					Authorization: `Bearer ${authStore.accessToken}`
+				});
+			} catch (error) {
+				return Promise.reject(error);
+			}
+		} else {
 			config.headers = new axios.AxiosHeaders({
 				...config.headers,
 				Authorization: `Bearer ${authStore.accessToken}`
@@ -30,15 +39,15 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
 	(response) => response,
 	async (error) => {
+		const authStore = useAuthStore();
+
 		if (error.response?.status === 401) {
-			const authStore = useAuthStore();
 			try {
-				if (!authStore.isLoading) {
-					await authStore.refreshTokens();
-					error.config.headers.Authorization = `Bearer ${authStore.accessToken}`;
-					return apiClient.request(error.config);
-				}
-			} catch {
+				await authStore.refreshTokens();
+
+				error.config.headers.Authorization = `Bearer ${authStore.accessToken}`;
+				return apiClient.request(error.config);
+			} catch (refreshError) {
 				authStore.resetAuthState();
 				router.push('/auth/login');
 			}

@@ -41,7 +41,7 @@ onMounted(fetchUser);
 			<v-btn v-if="!isEditing" color="primary" @click="toggleEdit">
 				Редактировать
 			</v-btn>
-			<v-btn v-if="isEditing" color="success" @click="() => saveChanges(user)">
+			<v-btn v-if="isEditing" color="success" @click="saveChanges">
 				Сохранить
 			</v-btn>
 
